@@ -53,7 +53,12 @@ func (h *SubscriptionHandler) create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *SubscriptionHandler) list(w http.ResponseWriter, r *http.Request) {
-	subscriptions, err := h.service.List("all")
+	status := r.URL.Query().Get("status")
+	if status == "" {
+		status = "all"
+	}
+
+	subscriptions, err := h.service.List(status)
 	if err != nil {
 		h.handleError(w, err)
 		return

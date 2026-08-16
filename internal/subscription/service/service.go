@@ -96,9 +96,9 @@ func (s *subscriptionService) List(status string) ([]model.Subscription, error) 
 	}
 
 	if statusFilter != "" {
-		filtered := subscriptions[:0]
+		filtered := make([]model.Subscription, 0, len(subscriptions))
 		for _, subscription := range subscriptions {
-			if subscription.Status != statusFilter {
+			if subscription.Status == statusFilter {
 				filtered = append(filtered, subscription)
 			}
 		}
@@ -189,7 +189,11 @@ func (s *subscriptionService) UpcomingCharges(days int) (UpcomingCharges, error)
 	}
 
 	today, _ := time.Parse(model.DateLayout, s.now().Format(model.DateLayout))
-	end := today.AddDate(0, 0, days)
+	// "days" upcoming charges span an inclusive window of `days` days starting
+	// today: [today, today+days-1]. Using days-1 (rather than days) as the
+	// upper bound keeps the window to exactly `days` days instead of including
+	// the (days+1)-th day.
+	end := today.AddDate(0, 0, days-1)
 
 	var upcoming []model.Subscription
 	for _, subscription := range subscriptions {

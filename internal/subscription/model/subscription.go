@@ -168,6 +168,10 @@ func ParseDateStrict(value string) (time.Time, error) {
 	return parsed, nil
 }
 
+// RoundMoney rounds a monetary amount to two decimal places using half-up
+// rounding. math.Round (half away from zero) is used rather than math.Floor
+// so that values such as 39.955 round to 39.96 instead of being truncated to
+// 39.95.
 func RoundMoney(value float64) float64 {
-	return math.Floor(value*100) / 100
+	return math.Round(value*100) / 100
 }

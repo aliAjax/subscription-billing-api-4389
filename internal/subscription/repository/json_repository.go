@@ -38,7 +38,7 @@ func (r *JSONRepository) List() ([]model.Subscription, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	return r.subscriptions, nil
+	return copySubscriptions(r.subscriptions), nil
 }
 
 func (r *JSONRepository) GetByID(id string) (model.Subscription, error) {
