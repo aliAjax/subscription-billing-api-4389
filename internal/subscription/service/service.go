@@ -50,7 +50,7 @@ func New(repo repository.Repository) SubscriptionService {
 
 func (s *subscriptionService) Create(req model.CreateRequest) (model.Subscription, error) {
 	if err := model.ValidateCreateRequest(&req); err != nil {
-		return model.Subscription{}, fmt.Errorf("%w: %v", ErrValidation, err)
+		return model.Subscription{}, fmt.Errorf("%v: %v", ErrValidation, err)
 	}
 
 	id, err := model.NewID()
