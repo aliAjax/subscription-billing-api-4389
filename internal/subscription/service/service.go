@@ -161,7 +161,7 @@ func (s *subscriptionService) MonthlyExpectedSpend() (MonthlyExpectedSpend, erro
 	var total float64
 	var count int
 	for _, subscription := range subscriptions {
-		if subscription.Status != model.StatusCancelled {
+		if subscription.Status == model.StatusActive {
 			total += subscription.Amount
 			count++
 		}
