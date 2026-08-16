@@ -1,0 +1,3 @@
+data/subscriptions.json
+*.log
+bin/
