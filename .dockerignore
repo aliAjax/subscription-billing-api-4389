@@ -1,5 +1,8 @@
 .git
-.gitignore
-README.md
-data/*
-bin/
+*.log
+*.jsonl
+node_modules
+dist
+build
+.env
+.env.*
