@@ -169,5 +169,5 @@ func ParseDateStrict(value string) (time.Time, error) {
 }
 
 func RoundMoney(value float64) float64 {
-	return math.Floor(value*100) / 100
+	return math.Round(value*100) / 100
 }
