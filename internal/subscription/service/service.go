@@ -66,7 +66,6 @@ func (s *subscriptionService) Create(req model.CreateRequest) (model.Subscriptio
 		Amount:          req.Amount,
 		Status:          req.Status,
 		NextRenewalDate: req.NextRenewalDate,
-		Metadata:        req.Metadata,
 		CreatedAt:       now,
 		UpdatedAt:       now,
 	}
