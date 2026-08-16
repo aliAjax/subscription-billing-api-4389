@@ -34,7 +34,7 @@ func ParseStatus(value string) (Status, error) {
 		return StatusActive, nil
 	}
 	if !normalized.Valid() {
-		return StatusActive, nil
+		return "", fmt.Errorf("status must be one of active, paused, cancelled: got %q", value)
 	}
 	return normalized, nil
 }

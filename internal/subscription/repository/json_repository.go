@@ -51,7 +51,7 @@ func (r *JSONRepository) GetByID(id string) (model.Subscription, error) {
 		}
 	}
 
-	return model.Subscription{}, nil
+	return model.Subscription{}, ErrNotFound
 }
 
 func (r *JSONRepository) Create(subscription model.Subscription) error {

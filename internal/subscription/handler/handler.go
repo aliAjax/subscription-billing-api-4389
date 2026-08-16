@@ -145,6 +145,7 @@ func (h *SubscriptionHandler) handleError(w http.ResponseWriter, err error) {
 func decodeJSON(w http.ResponseWriter, r *http.Request, destination any) error {
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
 	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
 
 	if err := decoder.Decode(destination); err != nil {
 		return err
