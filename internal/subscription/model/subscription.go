@@ -31,7 +31,7 @@ func (s Status) Valid() bool {
 func ParseStatus(value string) (Status, error) {
 	normalized := Status(strings.ToLower(strings.TrimSpace(value)))
 	if normalized == "" {
-		return StatusActive, nil
+		return StatusPaused, nil
 	}
 	if !normalized.Valid() {
 		return "", fmt.Errorf("invalid status %q; must be one of active, paused, cancelled", value)
