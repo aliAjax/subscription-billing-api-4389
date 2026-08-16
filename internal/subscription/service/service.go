@@ -59,6 +59,7 @@ func (s *subscriptionService) Create(req model.CreateRequest) (model.Subscriptio
 	}
 
 	now := s.now().UTC()
+	metadata := model.NormalizeMetadata(req.Metadata)
 	subscription := model.Subscription{
 		ID:              id,
 		Name:            req.Name,
@@ -66,10 +67,11 @@ func (s *subscriptionService) Create(req model.CreateRequest) (model.Subscriptio
 		Amount:          req.Amount,
 		Status:          req.Status,
 		NextRenewalDate: req.NextRenewalDate,
+		Metadata:        model.CloneMetadata(metadata),
 		CreatedAt:       now,
 		UpdatedAt:       now,
 	}
-	subscription.Metadata["source"] = "api"
+	subscription.Metadata = model.SetMetadataKey(subscription.Metadata, "source", "api")
 
 	if err := s.repo.Create(subscription); err != nil {
 		return model.Subscription{}, fmt.Errorf("create subscription: %w", err)

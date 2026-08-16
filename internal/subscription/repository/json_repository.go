@@ -58,6 +58,7 @@ func (r *JSONRepository) Create(subscription model.Subscription) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
+	subscription.Metadata = model.NormalizeMetadata(subscription.Metadata)
 	next := append(copySubscriptions(r.subscriptions), subscription)
 	if err := r.persist(next); err != nil {
 		return err
@@ -70,6 +71,7 @@ func (r *JSONRepository) Update(subscription model.Subscription) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
+	subscription.Metadata = model.NormalizeMetadata(subscription.Metadata)
 	index := -1
 	for i, item := range r.subscriptions {
 		if item.ID == subscription.ID {
@@ -136,6 +138,9 @@ func (r *JSONRepository) load() error {
 	}
 	if file.Subscriptions == nil {
 		file.Subscriptions = make([]model.Subscription, 0)
+	}
+	for i := range file.Subscriptions {
+		file.Subscriptions[i].Metadata = model.NormalizeMetadata(file.Subscriptions[i].Metadata)
 	}
 	r.subscriptions = file.Subscriptions
 	return nil

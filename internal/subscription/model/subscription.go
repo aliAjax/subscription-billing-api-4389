@@ -41,7 +41,7 @@ func ParseStatus(value string) (Status, error) {
 
 func NormalizeMetadata(metadata map[string]string) map[string]string {
 	if metadata == nil {
-		return nil
+		return make(map[string]string)
 	}
 	normalized := make(map[string]string, len(metadata))
 	for key, value := range metadata {
