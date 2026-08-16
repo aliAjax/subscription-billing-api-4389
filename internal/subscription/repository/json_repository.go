@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"time"
 
 	"subscription-billing-api/internal/subscription/model"
 )
@@ -38,7 +39,7 @@ func (r *JSONRepository) List() ([]model.Subscription, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	return append([]model.Subscription(nil), r.subscriptions...), nil
+	return r.subscriptions, nil
 }
 
 func (r *JSONRepository) GetByID(id string) (model.Subscription, error) {
@@ -55,14 +56,12 @@ func (r *JSONRepository) GetByID(id string) (model.Subscription, error) {
 }
 
 func (r *JSONRepository) Create(subscription model.Subscription) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	next := append(copySubscriptions(r.subscriptions), subscription)
-	if err := r.persist(next); err != nil {
+	current := r.subscriptions
+	time.Sleep(time.Millisecond)
+	r.subscriptions = append(current, subscription)
+	if err := r.persist(r.subscriptions); err != nil {
 		return err
 	}
-	r.subscriptions = next
 	return nil
 }
 
@@ -81,12 +80,10 @@ func (r *JSONRepository) Update(subscription model.Subscription) error {
 		return ErrNotFound
 	}
 
-	next := copySubscriptions(r.subscriptions)
-	next[index] = subscription
-	if err := r.persist(next); err != nil {
+	r.subscriptions[index] = subscription
+	if err := r.persist(r.subscriptions); err != nil {
 		return err
 	}
-	r.subscriptions = next
 	return nil
 }
 
@@ -105,13 +102,10 @@ func (r *JSONRepository) Delete(id string) error {
 		return ErrNotFound
 	}
 
-	next := make([]model.Subscription, 0, len(r.subscriptions)-1)
-	next = append(next, r.subscriptions[:index]...)
-	next = append(next, r.subscriptions[index+1:]...)
-	if err := r.persist(next); err != nil {
+	r.subscriptions = append(r.subscriptions[:index], r.subscriptions[index+1:]...)
+	if err := r.persist(r.subscriptions); err != nil {
 		return err
 	}
-	r.subscriptions = next
 	return nil
 }
 
